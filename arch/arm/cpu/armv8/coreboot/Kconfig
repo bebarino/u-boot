@@ -1,0 +1,22 @@
+config SYS_COREBOOT
+	bool "Support for booting u-boot as a coreboot payload"
+	imply SCSI
+	imply SCSI_AHCI
+	imply AHCI_PCI
+	imply MMC
+	imply MMC_PCI
+	imply MMC_SDHCI
+	imply MMC_SDHCI_SDMA
+	imply USB
+	imply USB_EHCI_HCD
+	imply USB_XHCI_HCD
+	imply USB_STORAGE
+	imply USB_KEYBOARD
+	imply ETH_DESIGNWARE
+	imply RTL8169
+	imply CMD_CBFS
+	imply FS_CBFS
+	imply CBMEM_CONSOLE
+	imply USE_PREBOOT
+	select SYSINFO
+	imply SYSINFO_EXTRA
