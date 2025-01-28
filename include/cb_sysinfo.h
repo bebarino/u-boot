@@ -229,6 +229,13 @@ struct sysinfo_t {
 extern struct sysinfo_t lib_sysinfo;
 
 /**
+ * detect_coreboot_table_at() - Helper to find coreboot table
+ *
+ * Return: Address of coreboot table or -ENOENT on failure
+ */
+long detect_coreboot_table_at(ulong start, ulong size);
+
+/**
  * get_coreboot_info() - parse the coreboot sysinfo table
  *
  * Parses the coreboot table if found, setting the GD_FLG_SKIP_LL_INIT flag if
