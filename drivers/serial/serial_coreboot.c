@@ -7,12 +7,12 @@
 
 #define LOG_CATGEGORY	UCLASS_SERIAL
 
+#include <cb_sysinfo.h>
 #include <dm.h>
 #include <log.h>
 #include <ns16550.h>
 #include <serial.h>
 #include <acpi/acpi_table.h>
-#include <asm/cb_sysinfo.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 

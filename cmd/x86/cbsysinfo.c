@@ -4,7 +4,7 @@
  * Written by Simon Glass <sjg@chromium.org>
  */
 
-#include <asm/cb_sysinfo.h>
+#include <cb_sysinfo.h>
 #include <command.h>
 #include <console.h>
 #include <asm/global_data.h>

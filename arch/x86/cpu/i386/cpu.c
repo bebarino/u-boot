@@ -18,13 +18,13 @@
  * src/arch/x86/lib/cpu.c
  */
 
+#include <coreboot_tables.h>
 #include <cpu_func.h>
 #include <init.h>
 #include <log.h>
 #include <malloc.h>
 #include <spl.h>
 #include <asm/control_regs.h>
-#include <asm/coreboot_tables.h>
 #include <asm/cpu.h>
 #include <asm/global_data.h>
 #include <asm/mp.h>

@@ -8,7 +8,7 @@
 #ifndef _COREBOOT_SYSINFO_H
 #define _COREBOOT_SYSINFO_H
 
-#include <asm/coreboot_tables.h>
+#include <coreboot_tables.h>
 #include <linux/types.h>
 
 /* Maximum number of memory range definitions */
@@ -245,5 +245,25 @@ int get_coreboot_info(struct sysinfo_t *info);
  * Return: pointer to sysinfo, or NULL if not available
  */
 const struct sysinfo_t *cb_get_sysinfo(void);
+
+/**
+ * coreboot_dram_init_banksize() - Initilize RAM banksize from coreboot sysinfo
+ * table
+ */
+int coreboot_dram_init_banksize(void);
+
+/**
+ * coreboot_dram_init() - Configure available RAM banks from coreboot sysinfo
+ * table
+ */
+int coreboot_dram_init(void);
+
+/**
+ * coreboot_board_get_usable_ram_top() - Get the top of RAM usable by U-Boot
+ * while running as a coreboot payload
+ *
+ * Return: Physical address as the top of RAM
+ */
+phys_addr_t coreboot_board_get_usable_ram_top(phys_size_t total_size);
 
 #endif
