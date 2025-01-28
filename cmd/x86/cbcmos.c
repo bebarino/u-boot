@@ -7,10 +7,10 @@
 
 #define LOG_CATEGORY	UCLASS_RTC
 
+#include <cb_sysinfo.h>
 #include <command.h>
 #include <dm.h>
 #include <rtc.h>
-#include <asm/cb_sysinfo.h>
 #include <asm/global_data.h>
 
 DECLARE_GLOBAL_DATA_PTR;

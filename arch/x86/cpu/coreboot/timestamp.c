@@ -6,9 +6,9 @@
  */
 
 #include <bootstage.h>
+#include <cb_sysinfo.h>
 #include <errno.h>
 #include <asm/arch/timestamp.h>
-#include <asm/cb_sysinfo.h>
 #include <asm/u-boot-x86.h>
 #include <linux/compiler.h>
 

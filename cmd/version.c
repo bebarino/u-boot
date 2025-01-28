@@ -10,7 +10,7 @@
 #include <version_string.h>
 #include <linux/compiler.h>
 #ifdef CONFIG_SYS_COREBOOT
-#include <asm/cb_sysinfo.h>
+#include <cb_sysinfo.h>
 #endif
 
 static int do_version(struct cmd_tbl *cmdtp, int flag, int argc,

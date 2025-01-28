@@ -6,6 +6,7 @@
 #define LOG_CATEGORY LOGC_ACPI
 
 #include <bloblist.h>
+#include <coreboot_tables.h>
 #include <log.h>
 #include <malloc.h>
 #include <smbios.h>
@@ -14,7 +15,6 @@
 #include <asm/sfi.h>
 #include <asm/mpspec.h>
 #include <asm/tables.h>
-#include <asm/coreboot_tables.h>
 #include <linux/log2.h>
 #include <linux/sizes.h>
 
