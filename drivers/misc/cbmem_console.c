@@ -3,9 +3,9 @@
  * Copyright (C) 2011 The ChromiumOS Authors.  All rights reserved.
  */
 
+#include <cb_sysinfo.h>
 #include <console.h>
 #include <linux/string.h>
-#include <asm/cb_sysinfo.h>
 
 void cbmemc_putc(struct stdio_dev *dev, char data)
 {

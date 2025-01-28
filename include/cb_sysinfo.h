@@ -8,7 +8,7 @@
 #ifndef _COREBOOT_SYSINFO_H
 #define _COREBOOT_SYSINFO_H
 
-#include <asm/coreboot_tables.h>
+#include <coreboot_tables.h>
 #include <linux/types.h>
 
 /* Maximum number of memory range definitions */
@@ -245,5 +245,9 @@ int get_coreboot_info(struct sysinfo_t *info);
  * Return: pointer to sysinfo, or NULL if not available
  */
 const struct sysinfo_t *cb_get_sysinfo(void);
+
+int dram_init_banksize_from_coreboot(void);
+int dram_init_from_coreboot(void);
+phys_addr_t board_get_usable_ram_top_from_coreboot(phys_size_t total_size);
 
 #endif

@@ -5,6 +5,7 @@
  * Graeme Russ, graeme.russ@gmail.com.
  */
 
+#include <cb_sysinfo.h>
 #include <cpu_func.h>
 #include <event.h>
 #include <fdtdec.h>
@@ -14,7 +15,6 @@
 #include <asm/io.h>
 #include <asm/msr.h>
 #include <asm/mtrr.h>
-#include <asm/cb_sysinfo.h>
 #include <asm/arch/timestamp.h>
 #include <dm/ofnode.h>
 
@@ -32,6 +32,8 @@ int arch_cpu_init(void)
 		printf("Failed to parse coreboot tables.\n");
 		return ret;
 	}
+	gd_set_acpi_start(map_to_sysmem(lib_sysinfo.rsdp));
+	gd_set_smbios_start(lib_sysinfo.smbios_start);
 
 	timestamp_init();
 
