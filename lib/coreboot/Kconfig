@@ -1,9 +1,9 @@
 menu "U-Boot as Coreboot payload"
-	depends on VENDOR_COREBOOT
+	depends on ARM64 || VENDOR_COREBOOT
 
 config SYS_COREBOOT
-	bool
-	default y
+	bool "Support for booting u-boot as a coreboot payload" if ARM64
+	default VENDOR_COREBOOT
 	imply SYS_NS16550
 	imply SCSI
 	imply SCSI_AHCI
@@ -17,15 +17,15 @@ config SYS_COREBOOT
 	imply USB_XHCI_HCD
 	imply USB_STORAGE
 	imply USB_KEYBOARD
-	imply VIDEO_COREBOOT
-	imply E1000
+	imply VIDEO_COREBOOT if x86
+	imply E1000 if x86
 	imply ETH_DESIGNWARE
-	imply PCH_GBE
+	imply PCH_GBE if X86
 	imply RTL8169
 	imply CMD_CBFS
 	imply FS_CBFS
 	imply CBMEM_CONSOLE
-	imply X86_TSC_READ_BASE
+	imply X86_TSC_READ_BASE if X86
 	imply USE_PREBOOT
 	select BINMAN if X86_RUN_64BIT
 	select SYSINFO

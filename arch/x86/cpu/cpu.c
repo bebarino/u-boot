@@ -340,19 +340,6 @@ int reserve_arch(void)
 }
 #endif
 
-static long detect_coreboot_table_at(ulong start, ulong size)
-{
-	u32 *ptr, *end;
-
-	size /= 4;
-	for (ptr = (void *)start, end = ptr + size; ptr < end; ptr += 4) {
-		if (*ptr == 0x4f49424c) /* "LBIO" */
-			return (long)ptr;
-	}
-
-	return -ENOENT;
-}
-
 long locate_coreboot_table(void)
 {
 	long addr;

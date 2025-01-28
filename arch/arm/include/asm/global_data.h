@@ -108,6 +108,9 @@ struct arch_global_data {
 #ifdef CONFIG_SMBIOS
 	ulong smbios_start;		/* Start address of SMBIOS table */
 #endif
+#ifdef CONFIG_SYS_COREBOOT
+	ulong coreboot_table;		/* Address of coreboot table */
+#endif
 };
 
 #include <asm-generic/global_data.h>

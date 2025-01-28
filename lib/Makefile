@@ -136,7 +136,7 @@ obj-$(CONFIG_LIB_UUID) += uuid.o
 obj-$(CONFIG_LIB_RAND) += rand.o
 obj-y += panic.o
 
-obj-$(CONFIG_VENDOR_COREBOOT)	+= coreboot/
+obj-$(CONFIG_SYS_COREBOOT)	+= coreboot/
 
 ifeq ($(CONFIG_XPL_BUILD),y)
 # SPL U-Boot may use full-printf, tiny-printf or none at all
