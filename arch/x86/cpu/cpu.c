@@ -22,6 +22,7 @@
 
 #include <bootstage.h>
 #include <command.h>
+#include <coreboot_tables.h>
 #include <cpu_func.h>
 #include <dm.h>
 #include <errno.h>
@@ -35,7 +36,6 @@
 #include <acpi/acpi_table.h>
 #include <asm/acpi.h>
 #include <asm/control_regs.h>
-#include <asm/coreboot_tables.h>
 #include <asm/cpu.h>
 #include <asm/global_data.h>
 #include <asm/lapic.h>

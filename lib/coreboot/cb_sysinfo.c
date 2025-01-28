@@ -6,7 +6,7 @@
  * Copyright (C) 2009 coresystems GmbH
  */
 
-#include <asm/cb_sysinfo.h>
+#include <cb_sysinfo.h>
 #include <init.h>
 #include <mapmem.h>
 #include <net.h>
@@ -22,13 +22,6 @@ DECLARE_GLOBAL_DATA_PTR;
  * RAM.
  */
 struct sysinfo_t lib_sysinfo __section(".data");
-
-/*
- * Some of this is x86 specific, and the rest of it is generic. Right now,
- * since we only support x86, we'll avoid trying to make lots of infrastructure
- * we don't need. If in the future, we want to use coreboot on some other
- * architecture, then take out the generic parsing code and move it elsewhere.
- */
 
 /* === Parsing code === */
 /* This is the generic parsing code */
@@ -453,9 +446,6 @@ static int cb_parse_header(void *addr, int len, struct sysinfo_t *info)
 	return 1;
 }
 
-/* == Architecture specific == */
-/* This is the x86 specific stuff */
-
 int get_coreboot_info(struct sysinfo_t *info)
 {
 	long addr;
@@ -470,8 +460,6 @@ int get_coreboot_info(struct sysinfo_t *info)
 	if (!ret)
 		return -ENOENT;
 	gd->arch.coreboot_table = addr;
-	gd_set_acpi_start(map_to_sysmem(info->rsdp));
-	gd_set_smbios_start(info->smbios_start);
 	gd->flags |= GD_FLG_SKIP_LL_INIT;
 
 	return 0;

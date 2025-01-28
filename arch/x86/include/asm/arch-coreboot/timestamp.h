@@ -8,7 +8,7 @@
 #ifndef __COREBOOT_TIMESTAMP_H__
 #define __COREBOOT_TIMESTAMP_H__
 
-#include <asm/cb_sysinfo.h>
+#include <cb_sysinfo.h>
 
 void timestamp_init(void);
 void timestamp_add(enum timestamp_id id, uint64_t ts_time);

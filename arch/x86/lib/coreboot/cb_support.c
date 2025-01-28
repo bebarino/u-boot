@@ -5,7 +5,7 @@
  * Copyright 2021 Google LLC
  */
 
-#include <asm/cb_sysinfo.h>
+#include <cb_sysinfo.h>
 #include <asm/e820.h>
 #include <linux/kernel.h>
 

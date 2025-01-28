@@ -8,6 +8,7 @@
 
 #define LOG_CATEGORY	LOGC_EXPO
 
+#include <cb_sysinfo.h>
 #include <cedit.h>
 #include <ctype.h>
 #include <errno.h>
@@ -15,7 +16,6 @@
 #include <log.h>
 #include <malloc.h>
 #include <vsprintf.h>
-#include <asm/cb_sysinfo.h>
 
 /**
  * struct build_info - Information to use when building

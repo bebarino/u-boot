@@ -3,5 +3,4 @@
 # Copyright 2021 Google LLC
 #
 
-obj-y += cb_sysinfo.o
 obj-y += cb_support.o

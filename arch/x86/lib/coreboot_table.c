@@ -3,11 +3,11 @@
  * Copyright (C) 2016, Bin Meng <bmeng.cn@gmail.com>
  */
 
+#include <coreboot_tables.h>
 #include <malloc.h>
 #include <net.h>
 #include <vesa.h>
 #include <acpi/acpi_s3.h>
-#include <asm/coreboot_tables.h>
 #include <asm/e820.h>
 #include <asm/global_data.h>
 

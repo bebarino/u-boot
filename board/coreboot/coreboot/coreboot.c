@@ -3,10 +3,10 @@
  * Copyright (C) 2018, Bin Meng <bmeng.cn@gmail.com>
  */
 
+#include <cb_sysinfo.h>
 #include <splash.h>
 #include <init.h>
 #include <smbios.h>
-#include <asm/cb_sysinfo.h>
 #include <asm/global_data.h>
 
 DECLARE_GLOBAL_DATA_PTR;
