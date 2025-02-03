@@ -224,7 +224,7 @@ static void show_option_table(const struct cb_cmos_option_table *tab)
 	const void *ptr, *end;
 
 	print_ptr("option_table", tab);
-	if (!tab->size)
+	if (!tab || !tab->size)
 		return;
 
 	printf(" Bit  Len  Cfg  ID  Name\n");
