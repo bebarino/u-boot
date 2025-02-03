@@ -2929,8 +2929,8 @@ menu "Debug commands"
 
 config CMD_CBSYSINFO
 	bool "cbsysinfo"
-	depends on X86
-	default y if SYS_COREBOOT
+	depends on SYS_COREBOOT
+	default y
 	help
 	  This provides information about the coreboot sysinfo table stored in
 	  memory by coreboot before jumping to U-Boot. It can be useful for
