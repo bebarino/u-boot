@@ -98,6 +98,11 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	simplefb {
+		compatible = "coreboot-simple-fb";
+		backlight = <&backlight>;
+	};
+
 	/* FIXED REGULATORS - parents above children */
 
 	/* This is the top level supply and variable voltage */
