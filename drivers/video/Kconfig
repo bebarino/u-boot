@@ -906,6 +906,16 @@ config VIDEO_SIMPLE
 	  before u-boot starts, and u-boot will simply render to the pre-
 	  allocated frame buffer surface.
 
+config VIDEO_SIMPLE_COREBOOT
+	bool "Simple display driver for preconfigured display from coreboot"
+	help
+	  Enables a simple generic display driver which utilizes the
+	  information from coreboot.
+
+	  This driver assumes that the display hardware has been initialized
+	  before u-boot starts, and u-boot will simply render to the pre-
+	  allocated frame buffer surface.
+
 config VIDEO_DT_SIMPLEFB
 	bool "Enable SimpleFB support for passing framebuffer to OS"
 	help
