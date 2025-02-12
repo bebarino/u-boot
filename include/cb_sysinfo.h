@@ -114,6 +114,8 @@
  * acpi_gnvs: @Pointer to Intel Global NVS struct, see struct acpi_global_nvs
  * @board_id: Board ID indicating the board variant, typically 0xffffffff
  * @ram_code: RAM code indicating the SDRAM type, typically 0xffffffff
+ * @sku_id: SKU ID indicating the board SKU, typically 0xffffffff
+ * @fw_config: FW config indicating the firmware configuration, typically 0xffffffff
  * @wifi_calibration: WiFi calibration info, NULL if none
  * @ramoops_buffer: Address of kernel Ramoops buffer
  * @ramoops_buffer_size: Sizeof of Ramoops buffer, typically 1MB
@@ -204,6 +206,8 @@ struct sysinfo_t {
 	void		*acpi_gnvs;
 	u32		board_id;
 	u32		ram_code;
+	u32		sku_id;
+	u64		fw_config;
 	void		*wifi_calibration;
 	u64	ramoops_buffer;
 	u32	ramoops_buffer_size;

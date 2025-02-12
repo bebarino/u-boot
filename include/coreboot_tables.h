@@ -438,6 +438,17 @@ struct cb_tsc_info {
 #define CB_TAG_SERIALNO			0x002a
 #define CB_MAX_SERIALNO_LENGTH		32
 
+#define CB_TAG_BOARD_CONFIG		0x0040
+struct cb_board_config {
+	u32 tag;
+	u32 size;
+
+	u64 fw_config;
+	u32 board_id;
+	u32 ram_code;
+	u32 sku_id;
+};
+
 #define CB_TAG_ACPI_RSDP		0x0043
 
 #define CB_TAG_CMOS_OPTION_TABLE	0x00c8
