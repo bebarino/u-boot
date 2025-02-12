@@ -418,6 +418,8 @@ static void show_table(struct sysinfo_t *info, bool verbose)
 	print_ptr("MRC cache", info->mrc_cache);
 	print_ptr("ACPI GNVS", info->acpi_gnvs);
 	print_hex("Board ID", info->board_id);
+	print_hex("SKU ID", info->sku_id);
+	print_addr64("FWCONFIG", info->fw_config);
 	print_hex("RAM code", info->ram_code);
 	print_ptr("WiFi calib", info->wifi_calibration);
 	print_addr64("Ramoops buff", info->ramoops_buffer);
