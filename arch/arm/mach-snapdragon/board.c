@@ -14,6 +14,7 @@
 #include <asm/io.h>
 #include <asm/psci.h>
 #include <asm/system.h>
+#include <cb_sysinfo.h>
 #include <dm/device.h>
 #include <dm/pinctrl.h>
 #include <dm/uclass-internal.h>
@@ -48,6 +49,10 @@ static struct {
 
 int dram_init(void)
 {
+#ifdef CONFIG_SYS_COREBOOT
+	if (gd->arch.coreboot_table)
+		return coreboot_dram_init();
+#endif
 	/*
 	 * gd->ram_base / ram_size have been setup already
 	 * in qcom_parse_memory().
@@ -81,8 +86,21 @@ static void qcom_configure_bi_dram(void)
 	}
 }
 
+phys_addr_t board_get_usable_ram_top(phys_size_t total_size)
+{
+#ifdef CONFIG_SYS_COREBOOT
+	if (gd->arch.coreboot_table)
+		return coreboot_board_get_usable_ram_top(total_size);
+#endif
+	return gd->ram_top;
+}
+
 int dram_init_banksize(void)
 {
+#ifdef CONFIG_SYS_COREBOOT
+	if (gd->arch.coreboot_table)
+		return coreboot_dram_init_banksize();
+#endif
 	qcom_configure_bi_dram();
 
 	return 0;
@@ -235,6 +253,11 @@ int board_fdt_blob_setup(void **fdtp)
 		ret = qcom_parse_memory(external_fdt);
 	}
 
+#ifdef CONFIG_SYS_COREBOOT
+	if (gd->arch.coreboot_table)
+		debug("Using coreboot tables for memory ranges\n");
+	else
+#endif
 	if (ret < 0)
 		panic("No valid memory ranges found!\n");
 
