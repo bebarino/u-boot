@@ -340,7 +340,7 @@ static int cros_read_kernel(struct bootflow *bflow)
 
 	/* Check that the header is not smaller than permitted */
 	if (priv->body_offset < PROBE_SIZE)
-		return log_msg_ret("san", EFAULT);
+		return log_msg_ret("san", -EFAULT);
 
 	/* Read kernel body */
 	num_blks = priv->body_size >> desc->log2blksz;
