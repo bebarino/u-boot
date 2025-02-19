@@ -3,8 +3,10 @@
  * Copyright © 2019 Collabora Ltd
  */
 
+#include <cb_sysinfo.h>
 #include <config.h>
 #include <command.h>
+#include <event.h>
 #include <fdtdec.h>
 #include <fs.h>
 #include <log.h>
@@ -141,6 +143,19 @@ static void pstore_init_buffer_size(void)
 		buffer_size = pstore_pmsg_size;
 }
 
+static void pstore_set_end(void)
+{
+	if (pstore_length < (pstore_record_size + pstore_console_size
+			     + pstore_ftrace_size + pstore_pmsg_size)) {
+		printf("pstore <len> should be larger than the sum of all records sizes\n");
+		pstore_length = 0;
+	}
+
+	log_debug("pstore set done: start 0x%08llx - length 0x%llx\n",
+		  (unsigned long long)pstore_addr,
+		  (unsigned long long)pstore_length);
+}
+
 /**
  * pstore_set() - Initialize PStore settings from command line arguments
  * @cmdtp: Command data struct pointer
@@ -194,18 +209,36 @@ static int pstore_set(struct cmd_tbl *cmdtp, int flag,  int argc,
 	if (argc > 7)
 		pstore_ecc_size = hextoul(argv[7], NULL);
 
-	if (pstore_length < (pstore_record_size + pstore_console_size
-			     + pstore_ftrace_size + pstore_pmsg_size)) {
-		printf("pstore <len> should be larger than the sum of all records sizes\n");
-		pstore_length = 0;
-	}
-
-	log_debug("pstore set done: start 0x%08llx - length 0x%llx\n",
-	          (unsigned long long)pstore_addr,
-	          (unsigned long long)pstore_length);
+	pstore_set_end();
 
 	return 0;
 }
+
+#if CONFIG_IS_ENABLED(SYS_COREBOOT)
+static int pstore_coreboot_init(void)
+{
+	const struct sysinfo_t *sysinfo;
+
+	sysinfo = cb_get_sysinfo();
+	if (!sysinfo)
+		return 0;
+
+	/*
+	 * The sysinfo pointer always exists, while the pstore buffer will be
+	 * zero size if this isn't a coreboot payload.
+	 */
+	if (!sysinfo->ramoops_buffer_size)
+		return 0;
+
+	pstore_addr = sysinfo->ramoops_buffer;
+	pstore_length = sysinfo->ramoops_buffer_size;
+
+	pstore_set_end();
+
+	return 0;
+}
+EVENT_SPY_SIMPLE(EVT_LAST_STAGE_INIT, pstore_coreboot_init);
+#endif
 
 /**
  * pstore_print_buffer() - Print buffer
