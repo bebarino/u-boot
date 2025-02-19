@@ -710,7 +710,8 @@ void enable_caches(void)
 	gd->arch.tlb_size = tlb_size;
 
 	/* We do the carveouts only for QCS404, for now. */
-	if (fdt_node_check_compatible(gd->fdt_blob, 0, "qcom,qcs404") == 0) {
+	if (fdt_node_check_compatible(gd->fdt_blob, 0, "qcom,qcs404") == 0 ||
+	    fdt_node_check_compatible(gd->fdt_blob, 0, "qcom,sc7180") == 0) {
 		carveout_start = get_timer(0);
 		/* Takes ~20-50ms on SDM845 */
 		carve_out_reserved_memory();
