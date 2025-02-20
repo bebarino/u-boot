@@ -7,6 +7,7 @@
  */
 
 #include <cb_sysinfo.h>
+#include <fdt_support.h>
 #include <init.h>
 #include <mapmem.h>
 #include <net.h>
@@ -511,3 +512,122 @@ const struct sysinfo_t *cb_get_sysinfo(void)
 
 	return NULL;
 }
+
+#if CONFIG_IS_ENABLED(OF_LIBFDT)
+void fdt_fixup_coreboot(void *blob)
+{
+	char node[32];
+	int  nodeoffset;	/* node offset from libfdt */
+	u32 addr_cells_root;
+	u32 size_cells_root;
+	u32 addr_cells;
+	u32 size_cells;
+	u64 header_addr;
+	u64 header_size;
+	u64 cbmem_addr;
+	u64 cbmem_size;
+	int i;
+	const struct memrange *cbmem_range = NULL;
+
+	if (!gd->arch.coreboot_table)
+		return;
+
+	for (i = 0; i < lib_sysinfo.n_memranges; i++) {
+		const struct memrange *memrange = &lib_sysinfo.memrange[i];
+
+		if (memrange->type == CB_MEM_TABLE) {
+			cbmem_range = memrange;
+			break;
+		}
+	}
+
+	if (!cbmem_range) {
+		log_err("Missing cbmem table\n");
+		return;
+	}
+
+	nodeoffset = fdt_path_offset(blob, "/");
+	if (nodeoffset < 0) {
+		/* Not found or something else bad happened. */
+		log_err("fdt_path_offset() returned %s\n", fdt_strerror(nodeoffset));
+		return;
+	}
+	addr_cells_root = fdt_getprop_u32_default_node(blob, nodeoffset, 0, "#address-cells", 2);
+	size_cells_root = fdt_getprop_u32_default_node(blob, nodeoffset, 0, "#size-cells", 2);
+
+	nodeoffset = fdt_find_or_add_subnode(blob, nodeoffset, "firmware");
+	if (nodeoffset < 0) {
+		log_err("Add 'firmware' node failed: %s\n", fdt_strerror(nodeoffset));
+		return;
+	}
+
+	addr_cells = fdt_getprop_u32_default_node(blob, nodeoffset, 0,
+						  "#address-cells", addr_cells_root);
+	size_cells = fdt_getprop_u32_default_node(blob, nodeoffset, 0,
+						  "#size-cells", size_cells_root);
+	fdt_setprop_u32(blob, nodeoffset, "#address-cells", addr_cells);
+	fdt_setprop_u32(blob, nodeoffset, "#size-cells", size_cells);
+
+	fdt_setprop_empty(blob, nodeoffset, "ranges");
+
+	header_addr = (u64)lib_sysinfo.header;
+	header_size = lib_sysinfo.header->header_bytes + lib_sysinfo.header->table_bytes;
+
+	sprintf(node, "coreboot@%llx", header_addr);
+	nodeoffset = fdt_add_subnode(blob, nodeoffset, node);
+	if (nodeoffset < 0) {
+		log_err("Add '%s' node failed: %s\n", node, fdt_strerror(nodeoffset));
+		return;
+	}
+
+	fdt_setprop_string(blob, nodeoffset, "compatible", "coreboot");
+
+	if (addr_cells == 1) {
+		fdt_setprop_u32(blob, nodeoffset, "reg", header_addr);
+	} else if (addr_cells == 2) {
+		fdt_setprop_u64(blob, nodeoffset, "reg", header_addr);
+	} else {
+		log_err("Unsupported #address-cells: %u\n", addr_cells);
+		goto clean_coreboot;
+	}
+
+	if (size_cells == 1) {
+		fdt_appendprop_u32(blob, nodeoffset, "reg", header_size);
+	} else if (size_cells == 2) {
+		fdt_appendprop_u64(blob, nodeoffset, "reg", header_size);
+	} else {
+		log_err("Unsupported #size-cells: %u\n", addr_cells);
+		goto clean_coreboot;
+	}
+
+	cbmem_addr = cbmem_range->base;
+	cbmem_size = cbmem_range->size;
+
+	if (addr_cells == 1) {
+		fdt_appendprop_u32(blob, nodeoffset, "reg", cbmem_addr);
+	} else if (addr_cells == 2) {
+		fdt_appendprop_u64(blob, nodeoffset, "reg", cbmem_addr);
+	} else {
+		log_err("Unsupported #address-cells: %u\n", addr_cells);
+		goto clean_coreboot;
+	}
+
+	if (size_cells == 1) {
+		fdt_appendprop_u32(blob, nodeoffset, "reg", cbmem_size);
+	} else if (size_cells == 2) {
+		fdt_appendprop_u64(blob, nodeoffset, "reg", cbmem_size);
+	} else {
+		log_err("Unsupported #size-cells: %u\n", addr_cells);
+		goto clean_coreboot;
+	}
+
+	fdt_setprop_u32(blob, nodeoffset, "board-id", lib_sysinfo.board_id);
+	fdt_setprop_u32(blob, nodeoffset, "sku-id", lib_sysinfo.sku_id);
+	fdt_setprop_u32(blob, nodeoffset, "ram-code", lib_sysinfo.ram_code);
+	if (lib_sysinfo.fw_config != ~0ULL)
+		fdt_setprop_u64(blob, nodeoffset, "fw-config", lib_sysinfo.fw_config);
+
+clean_coreboot:
+	fdt_del_node_and_alias(blob, node);
+}
+#endif
