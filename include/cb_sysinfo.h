@@ -258,6 +258,13 @@ int get_coreboot_info(struct sysinfo_t *info);
 const struct sysinfo_t *cb_get_sysinfo(void);
 
 /**
+ * fdt_fixup_coreboot() - Add the /firmware/coreboot node to the FDT
+ *
+ * Add the /firmware/coreboot node to the FDT if U-Boot is a coreboot payload.
+ */
+void fdt_fixup_coreboot(void *blob);
+
+/**
  * coreboot_dram_init_banksize() - Initilize RAM banksize from coreboot sysinfo
  * table
  */
