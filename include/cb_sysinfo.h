@@ -250,6 +250,8 @@ int get_coreboot_info(struct sysinfo_t *info);
  */
 const struct sysinfo_t *cb_get_sysinfo(void);
 
+void fdt_fixup_coreboot(void *blob);
+
 int dram_init_banksize_from_coreboot(void);
 int dram_init_from_coreboot(void);
 phys_addr_t board_get_usable_ram_top_from_coreboot(phys_size_t total_size);
