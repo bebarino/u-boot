@@ -30,6 +30,7 @@
 #include <asm/byteorder.h>
 #include <asm/cache.h>
 #include <asm/io.h>
+#include <u-boot/lz4.h>
 
 static int
 do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
@@ -253,6 +254,18 @@ do_imgextract(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
 			}
 			break;
 #endif /* CONFIG_LZO */
+#if IS_ENABLED(CONFIG_LZ4)
+		case IH_COMP_LZ4:
+			{
+				int ret;
+				size_t size = unc_len;
+				printf("   Uncompressing part %d ... ", part);
+
+				ret = ulz4fn((void *)data, len, (void *)dest, &size);
+				len = size;
+			}
+			break;
+#endif /* CONFIG_LZ4 */
 #if IS_ENABLED(CONFIG_ZSTD)
 		case IH_COMP_ZSTD:
 			{
