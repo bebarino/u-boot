@@ -10,6 +10,8 @@
 #include <bootm.h>
 #include <bootstage.h>
 #include <command.h>
+#include <coreboot_tables.h>
+#include <coreboot_timestamp.h>
 #include <efi.h>
 #include <hang.h>
 #include <log.h>
@@ -24,9 +26,6 @@
 #include <asm/cpu.h>
 #include <asm/byteorder.h>
 #include <asm/zimage.h>
-#ifdef CONFIG_SYS_COREBOOT
-#include <asm/arch/timestamp.h>
-#endif
 
 DECLARE_GLOBAL_DATA_PTR;
 

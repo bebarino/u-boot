@@ -7,6 +7,7 @@
  */
 
 #include <cb_sysinfo.h>
+#include <coreboot_timestamp.h>
 #include <fdt_support.h>
 #include <init.h>
 #include <mapmem.h>
@@ -490,6 +491,8 @@ int get_coreboot_info(struct sysinfo_t *info)
 		return -ENOENT;
 	gd->arch.coreboot_table = addr;
 	gd->flags |= GD_FLG_SKIP_LL_INIT;
+
+	timestamp_init();
 
 	return 0;
 }
