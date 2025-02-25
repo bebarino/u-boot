@@ -15,3 +15,4 @@ obj-$(CONFIG_$(XPL_)COREBOOT_SYSINFO) += cb_sysinfo.o
 ifndef CONFIG_XPL_BUILD
 obj-y += sdram.o
 endif
+obj-$(CONFIG_$(XPL_)COREBOOT_SYSINFO) += timestamp.o
