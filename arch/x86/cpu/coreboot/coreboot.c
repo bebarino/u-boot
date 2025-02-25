@@ -6,6 +6,7 @@
  */
 
 #include <cb_sysinfo.h>
+#include <coreboot_timestamp.h>
 #include <cpu_func.h>
 #include <event.h>
 #include <fdtdec.h>
@@ -15,7 +16,6 @@
 #include <asm/io.h>
 #include <asm/msr.h>
 #include <asm/mtrr.h>
-#include <asm/arch/timestamp.h>
 #include <dm/ofnode.h>
 
 int arch_cpu_init(void)
@@ -34,8 +34,6 @@ int arch_cpu_init(void)
 
 	gd_set_acpi_start(map_to_sysmem(lib_sysinfo.rsdp));
 	gd_set_smbios_start(lib_sysinfo.smbios_start);
-
-	timestamp_init();
 
 	return 0;
 }
@@ -74,8 +72,6 @@ static void board_final_init(void)
 
 static int last_stage_init(void)
 {
-	timestamp_add_to_bootstage();
-
 	if (IS_ENABLED(CONFIG_XPL_BUILD))
 		return 0;
 

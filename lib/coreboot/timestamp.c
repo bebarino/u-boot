@@ -7,10 +7,12 @@
 
 #include <bootstage.h>
 #include <cb_sysinfo.h>
+#include <coreboot_tables.h>
+#include <coreboot_timestamp.h>
+#include <event.h>
 #include <errno.h>
-#include <asm/arch/timestamp.h>
-#include <asm/u-boot-x86.h>
 #include <linux/compiler.h>
+#include <time.h>
 
 void timestamp_init(void)
 {
@@ -33,10 +35,10 @@ void timestamp_add(enum timestamp_id id, uint64_t ts_time)
 
 void timestamp_add_now(enum timestamp_id id)
 {
-	timestamp_add(id, rdtsc());
+	timestamp_add(id, get_ticks());
 }
 
-int timestamp_add_to_bootstage(void)
+static int timestamp_add_to_bootstage(void)
 {
 	const struct sysinfo_t *info = cb_get_sysinfo();
 	const struct timestamp_table *ts_table = info->tstamp_table;
@@ -69,9 +71,10 @@ int timestamp_add_to_bootstage(void)
 		if (name) {
 			bootstage_add_record(0, name, BOOTSTAGEF_ALLOC,
 					     tse->entry_stamp /
-							get_tbclk_mhz());
+							(get_tbclk() / 1000000));
 		}
 	}
 
 	return 0;
 }
+EVENT_SPY_SIMPLE(EVT_LAST_STAGE_INIT, timestamp_add_to_bootstage);
