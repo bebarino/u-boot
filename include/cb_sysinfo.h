@@ -240,6 +240,13 @@ extern struct sysinfo_t lib_sysinfo;
 int get_coreboot_info(struct sysinfo_t *info);
 
 /**
+ * coreboot_early_init() - locate the coreboot tables during early init
+ *
+ * Return: 0
+ */
+int coreboot_early_init(void);
+
+/**
  * cb_get_sysinfo() - get a pointer to the parsed coreboot sysinfo
  *
  * Return: pointer to sysinfo, or NULL if not available

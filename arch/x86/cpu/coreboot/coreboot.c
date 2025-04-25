@@ -27,11 +27,11 @@ int arch_cpu_init(void)
 	if (ret)
 		return ret;
 
-	ret = get_coreboot_info(&lib_sysinfo);
-	if (ret != 0) {
-		printf("Failed to parse coreboot tables.\n");
-		return ret;
+	if (!gd->arch.coreboot_table)
+		printf("Failed to locate coreboot tables.\n");
+		return -ENOENT;
 	}
+
 	gd_set_acpi_start(map_to_sysmem(lib_sysinfo.rsdp));
 	gd_set_smbios_start(lib_sysinfo.smbios_start);
 

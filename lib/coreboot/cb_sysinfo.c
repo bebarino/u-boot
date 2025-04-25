@@ -465,6 +465,17 @@ int get_coreboot_info(struct sysinfo_t *info)
 	return 0;
 }
 
+int coreboot_early_init(void)
+{
+	int ret;
+
+	ret = get_coreboot_info(&lib_sysinfo);
+	if (ret != 0)
+		debug("Failed to parse coreboot tables.\n");
+
+	return 0;
+}
+
 const struct sysinfo_t *cb_get_sysinfo(void)
 {
 	if (!ll_boot_init())
