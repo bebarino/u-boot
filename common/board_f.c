@@ -12,6 +12,7 @@
 #include <config.h>
 #include <bloblist.h>
 #include <bootstage.h>
+#include <cb_sysinfo.h>
 #include <clock_legacy.h>
 #include <console.h>
 #include <cpu.h>
@@ -896,6 +897,9 @@ static void initcall_run_f(void)
 	 * For simplicity it should remain an ordered list of function calls.
 	 */
 	INITCALL(setup_mon_len);
+#if CONFIG_IS_ENABLED(SYS_COREBOOT)
+	INITCALL(coreboot_early_init);
+#endif
 #if CONFIG_IS_ENABLED(OF_CONTROL)
 	INITCALL(fdtdec_setup);
 #endif
