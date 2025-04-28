@@ -203,7 +203,7 @@ static int cmd_db_bind(struct udevice *dev)
 	}
 
 	/* On SM8550/SM8650 and newer SoCs cmd-db might not be mapped */
-	mmu_map_region((phys_addr_t)base, (phys_size_t)size, false);
+	//mmu_map_region((phys_addr_t)base, (phys_size_t)size, false);
 
 	cmd_db_header = base;
 	if (!cmd_db_magic_matches(cmd_db_header)) {
