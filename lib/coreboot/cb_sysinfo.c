@@ -674,3 +674,65 @@ unsigned int vpd_cbmem_parse_key_value(const u8 *blob, unsigned int offset,
 
 	return vpd_cbmem_parse_len(blob, offset, val_offset, val_len);
 }
+
+static unsigned int coreboot_set_one(const u8 *blob, unsigned int i)
+{
+	unsigned int vpd_type = blob[i++];
+	unsigned int key_offset;
+	unsigned int key_len;
+	unsigned int val_offset;
+	unsigned int val_len;
+	const u8 *key;
+	const u8 *val;
+
+	if (vpd_type != VPD_TYPE_INFO && vpd_type != VPD_TYPE_STRING)
+		return i;
+
+	i = vpd_cbmem_parse_key_value(blob, i, &key_offset, &key_len, &val_offset, &val_len);
+	if (vpd_type != VPD_TYPE_STRING)
+		return i;
+
+	key = blob + key_offset;
+	val = blob + val_offset;
+
+	if (!strncmp(key, "serial_number", key_len)) {
+		unsigned char serialno[64];
+
+		if (val_len > ARRAY_SIZE(serialno))
+			val_len = ARRAY_SIZE(serialno);
+
+		strncpy(serialno, val, val_len);
+		env_set("serial#", serialno);
+	}
+
+	return i;
+}
+
+/*
+ * Set environment variables based on the contents of VPD.
+ */
+static int coreboot_settings_r(void)
+{
+	const struct sysinfo_t *sysinfo;
+	const struct vpd_cbmem *vpd;
+	unsigned int i = 0;
+	unsigned int len;
+	const u8 *blob;
+
+	sysinfo = cb_get_sysinfo();
+	if (!sysinfo)
+		return 0;
+
+	vpd = sysinfo->chromeos_vpd;
+	if (!vpd)
+		return 0;
+
+	len = vpd->ro_size;
+	blob = vpd->blob;
+
+	while (i < len)
+		i = coreboot_set_one(blob, i);
+
+	return 0;
+}
+EVENT_SPY_SIMPLE(EVT_SETTINGS_R, coreboot_settings_r);
