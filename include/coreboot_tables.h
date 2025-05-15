@@ -551,6 +551,19 @@ struct cbmem_entry {
 #define CBMEM_ID_CONSOLE		0x434f4e53
 #define CBMEM_ID_NONE			0x00000000
 
+struct vpd_cbmem {
+	u32 magic;
+	u32 version;
+	u32 ro_size;
+	u32 rw_size;
+	u8 blob[];
+};
+
+#define VPD_TYPE_TERMINATOR		0x00
+#define VPD_TYPE_STRING			0x01
+#define VPD_TYPE_INFO			0xfe
+#define VPD_TYPE_IMPLICIT_TERMINATOR	0xff
+
 /**
  * high_table_reserve() - reserve configuration table in high memory
  *

@@ -264,6 +264,10 @@ int coreboot_early_init(void);
  */
 const struct sysinfo_t *cb_get_sysinfo(void);
 
+unsigned int vpd_cbmem_parse_key_value(const u8 *blob, unsigned int offset,
+		unsigned int *key_offset, unsigned int *key_len,
+		unsigned int *val_offset, unsigned int *val_len);
+
 /**
  * fdt_fixup_coreboot() - Add the /firmware/coreboot node to the FDT
  *

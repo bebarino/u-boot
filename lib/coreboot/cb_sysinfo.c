@@ -634,3 +634,43 @@ clean_coreboot:
 	fdt_del_node_and_alias(blob, node);
 }
 #endif
+
+/*
+ * Parse the length header that is 7 bits of length and a top bit indicating
+ * "more" to the length.
+ *
+ * |  7   | 6   5   4  3  2  1   0 |
+ * |------+------------------------|
+ * | more |        length          |
+ *
+ * The "more" bit indicates the next byte after this one has more lower
+ * significant 7 bits. This can be repeated multiple times to make long keys or
+ * values.
+ */
+static unsigned int vpd_cbmem_parse_len(const u8 *blob, unsigned int i,
+					unsigned int *start, unsigned int *_len)
+{
+	u8 more;
+	unsigned int len = 0;
+
+	do {
+		more = blob[i] & 0x80;
+		len <<= 7;
+		len |= blob[i] & 0x7f;
+		i++;
+	} while (more);
+
+	*_len = len;
+	*start = i;
+
+	return i + len;
+}
+
+unsigned int vpd_cbmem_parse_key_value(const u8 *blob, unsigned int offset,
+		unsigned int *key_offset, unsigned int *key_len,
+		unsigned int *val_offset, unsigned int *val_len)
+{
+	offset = vpd_cbmem_parse_len(blob, offset, key_offset, key_len);
+
+	return vpd_cbmem_parse_len(blob, offset, val_offset, val_len);
+}

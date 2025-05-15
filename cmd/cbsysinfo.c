@@ -436,6 +436,40 @@ static void show_table(struct sysinfo_t *info, bool verbose)
 	print_hex("MTC size", info->mtc_size);
 
 	print_ptr("Chrome OS VPD", info->chromeos_vpd);
+	if (info->chromeos_vpd) {
+		struct vpd_cbmem *vpd = info->chromeos_vpd;
+
+		print_hex("RO size", vpd->ro_size);
+		print_hex("RW size", vpd->rw_size);
+
+		unsigned int i = 0;
+		unsigned int len = vpd->ro_size;
+		const u8 *blob = vpd->blob;
+
+		while (i < len) {
+			unsigned int vpd_type = blob[i];
+
+			switch (vpd_type) {
+			case VPD_TYPE_INFO:
+			case VPD_TYPE_STRING:
+				i++;
+				unsigned int key_offset;
+				unsigned int key_len;
+				unsigned int val_offset;
+				unsigned int val_len;
+
+				i = vpd_cbmem_parse_key_value(blob, i, &key_offset, &key_len, &val_offset, &val_len);
+				if (vpd_type == VPD_TYPE_STRING)
+					printf("  \"%.*s\" = \"%.*s\"\n", key_len, blob + key_offset, val_len, blob + val_offset);
+
+				break;
+			default:
+				i++;
+				break;
+			}
+		}
+	}
+
 	print_ptr("RSDP", info->rsdp);
 	printf("%-12s: ", "Unimpl.");
 	if (info->unimpl_count) {
