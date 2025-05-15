@@ -12,6 +12,7 @@
 #include <init.h>
 #include <mapmem.h>
 #include <net.h>
+#include <net-common.h>
 #include <asm/global_data.h>
 #include <linux/errno.h>
 
@@ -703,6 +704,15 @@ static unsigned int coreboot_set_one(const u8 *blob, unsigned int i)
 
 		strncpy(serialno, val, val_len);
 		env_set("serial#", serialno);
+	} else if (!strncmp(key, "wifi_mac0", key_len)) {
+		u8 buf[ARP_HLEN_ASCII + 1];
+		unsigned char ethaddr[6];
+
+		if (!eth_env_get_enetaddr("wifiaddr", ethaddr)) {
+			strncpy(buf, val, val_len);
+			string_to_enetaddr(buf, ethaddr);
+			eth_env_set_enetaddr("wifiaddr", ethaddr);
+		}
 	}
 
 	return i;
