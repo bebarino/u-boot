@@ -686,9 +686,11 @@ static unsigned int coreboot_set_one(const u8 *blob, unsigned int i)
 	const u8 *key;
 	const u8 *val;
 
+	/* We only care about strings that may contain keys we can use */
 	if (vpd_type != VPD_TYPE_INFO && vpd_type != VPD_TYPE_STRING)
 		return i;
 
+	/* Conntinue to move 'i' forward through the VPD blob */
 	i = vpd_cbmem_parse_key_value(blob, i, &key_offset, &key_len, &val_offset, &val_len);
 	if (vpd_type != VPD_TYPE_STRING)
 		return i;

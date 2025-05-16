@@ -611,13 +611,34 @@ int fdt_fixup_memory(void *blob, u64 start, u64 size)
 	return fdt_fixup_memory_banks(blob, &start, &size, 1);
 }
 
+static void fdt_fixup_net_node(void *fdt, const char *path, const char *mac)
+{
+	int j;
+	char *tmp, *end;
+	unsigned char mac_addr[ARP_HLEN];
+
+	tmp = env_get(mac);
+	if (!tmp)
+		return;
+
+	for (j = 0; j < 6; j++) {
+		mac_addr[j] = tmp ?
+			      hextoul(tmp, &end) : 0;
+		if (tmp)
+			tmp = (*end) ? end + 1 : end;
+	}
+
+	do_fixup_by_path(fdt, path, "mac-address",
+			 &mac_addr, 6, 0);
+	do_fixup_by_path(fdt, path, "local-mac-address",
+			 &mac_addr, 6, 1);
+}
+
 void fdt_fixup_ethernet(void *fdt)
 {
-	int i = 0, j, prop;
-	char *tmp, *end;
+	int i = 0, w = 0, j, prop;
 	char mac[16];
 	const char *path;
-	unsigned char mac_addr[ARP_HLEN];
 	int offset;
 #ifdef FDT_SEQ_MACADDR_FROM_ENV
 	int nodeoff;
@@ -670,21 +691,22 @@ void fdt_fixup_ethernet(void *fdt)
 				continue;
 			i++;
 #endif
-			tmp = env_get(mac);
-			if (!tmp)
+			fdt_fixup_net_node(fdt, path, mac);
+		} else if (!strncmp(name, "wifi", 4)) {
+			/* Treat plain "wifi" same as "wifi0". */
+			if (!strcmp(name, "wifi"))
+				w = 0;
+			else
+				w = trailing_strtol(name);
+			if (w != -1) {
+				if (w == 0)
+					strcpy(mac, "wifiaddr");
+				else
+					sprintf(mac, "wifi%daddr", w);
+			} else {
 				continue;
-
-			for (j = 0; j < 6; j++) {
-				mac_addr[j] = tmp ?
-					      hextoul(tmp, &end) : 0;
-				if (tmp)
-					tmp = (*end) ? end + 1 : end;
 			}
-
-			do_fixup_by_path(fdt, path, "mac-address",
-					 &mac_addr, 6, 0);
-			do_fixup_by_path(fdt, path, "local-mac-address",
-					 &mac_addr, 6, 1);
+			fdt_fixup_net_node(fdt, path, mac);
 		}
 	}
 }
