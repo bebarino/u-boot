@@ -56,16 +56,22 @@ phys_addr_t coreboot_board_get_usable_ram_top(phys_size_t total_size)
 int coreboot_dram_init(void)
 {
 	int i;
+	phys_size_t ram_base = ~0UL;
 	phys_size_t ram_size = 0;
 
 	for (i = 0; i < lib_sysinfo.n_memranges; i++) {
 		struct memrange *memrange = &lib_sysinfo.memrange[i];
 		unsigned long long end = memrange->base + memrange->size;
 
-		if (memrange->type == CB_MEM_RAM && end > ram_size)
-			ram_size += memrange->size;
+		if (memrange->type == CB_MEM_RAM) {
+			if (ram_base > memrange->base)
+				ram_base = memrange->base;
+			if (end > ram_size)
+				ram_size += memrange->size;
+		}
 	}
 
+	gd->ram_base = ram_base;
 	gd->ram_size = ram_size;
 	if (ram_size == 0)
 		return -1;
