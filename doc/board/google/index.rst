@@ -9,3 +9,4 @@ Google
    chromebook_coral
    chromebook_link
    chromebook_samus
+   chromebook_trogdor
