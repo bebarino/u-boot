@@ -805,6 +805,7 @@ config VIDEO_IVYBRIDGE_IGD
 	  a special tool which configures the VGA ROM, but the graphics
 	  resolution can be selected in U-Boot.
 
+source "drivers/video/qcom/Kconfig"
 source "drivers/video/rockchip/Kconfig"
 
 config VIDEO_ARM_MALIDP

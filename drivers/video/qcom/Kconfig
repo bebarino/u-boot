@@ -1,0 +1,20 @@
+#
+
+menuconfig VIDEO_QCOM
+	bool "Enable Qualcomm Video Support"
+	depends on VIDEO
+	help
+	  Qualcomm SoCs provide video output capabilities for High-Definition
+	  Multimedia Interface (HDMI), Low-voltage Differential Signalling
+	  (LVDS), embedded DisplayPort (eDP) and Display Serial Interface (DSI).
+
+if VIDEO_QCOM
+
+config DISPLAY_QCOM_MIPI
+	bool "MIPI Port"
+	depends on VIDEO_QCOM
+	help
+	  This enables Mobile Industry Processor Interface (MIPI) display
+	  support. The MIPI controller sc7180 support.
+
+endif
